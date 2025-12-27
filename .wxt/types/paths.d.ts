@@ -5,17 +5,12 @@ declare module "wxt/browser" {
   export type PublicPath =
     | "/_locales/en/messages.json"
     | "/_locales/zh_CN/messages.json"
-    | "/background.js"
-    | "/content-scripts/content.js"
     | "/icon/128.png"
     | "/icon/16.png"
     | "/icon/32.png"
     | "/icon/48.png"
     | "/icon/96.png"
-    | "/popup-bak.html"
-    | "/sidebar.js"
     | "/sidepanel.html"
-    | "/types.js"
     | "/wxt.svg"
     | "/zsm.jpg"
   type HtmlPublicPath = Extract<PublicPath, `${string}.html`>

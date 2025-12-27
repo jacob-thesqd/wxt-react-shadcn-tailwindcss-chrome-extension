@@ -27,7 +27,7 @@ export function Home() {
         <div className="grid gap-4">
             <Card className="text-left">
                 <div className="flex flex-col space-y-1.5 p-6 pb-3">
-                    <h3 className="font-semibold leading-none tracking-tight text-base">{t("introduce")}</h3>
+                    <h3 className="font-semibold leading-none tracking-tight text-base">Test</h3>
                     <p className="text-sm max-w-lg text-balance leading-relaxed">
                         {t("description")}
                     </p>
