@@ -7,9 +7,10 @@ export default defineConfig((env) => {
     const isChrome = targetBrowser === "chrome";
 
     return {
-        filterEntrypoints: isChrome ? ["sidepanel"] : ["content"],
+        filterEntrypoints: isChrome ? ["sidepanel", "background"] : ["content", "background"],
         manifest: {
-            permissions: ["activeTab", "scripting", "sidePanel", "storage", "tabs"],
+            permissions: ["activeTab", "scripting", "sidePanel", "storage", "tabs", "webRequest"],
+            host_permissions: ["https://churchmediasquad.com/*"],
             action: {},
             name: "__MSG_extName__",
             description: "__MSG_extDescription__",
