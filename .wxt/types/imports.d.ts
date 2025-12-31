@@ -16,4 +16,5 @@ declare global {
   const i18n: typeof import('/Users/jacobvendramin/projects/mysquad-nextjs-untitled-ext/components/i18n')['default']
   const i18nConfig: typeof import('/Users/jacobvendramin/projects/mysquad-nextjs-untitled-ext/components/i18nConfig')['default']
   const storage: typeof import('wxt/storage')['storage']
+  const usePushNotifications: typeof import('/Users/jacobvendramin/projects/mysquad-nextjs-untitled-ext/hooks/usePushNotifications')['default']
 }

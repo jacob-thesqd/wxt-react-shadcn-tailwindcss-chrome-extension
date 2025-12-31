@@ -19,6 +19,7 @@ export default () => {
             ref={iframeRef}
             title="MySquad"
             src="http://localhost:3000"
+            allow="notifications"
         />
     );
 };

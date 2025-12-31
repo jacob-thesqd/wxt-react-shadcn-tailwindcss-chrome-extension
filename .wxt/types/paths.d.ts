@@ -6,14 +6,20 @@ declare module "wxt/browser" {
     | "/_locales/en/messages.json"
     | "/_locales/zh_CN/messages.json"
     | "/background.js"
+    | "/docs/whats-new/v1.3.md"
+    | "/docs/whats-new/v1.4.md"
+    | "/docs/whats-new/v1.5.md"
+    | "/docs/whats-new/v1.6.md"
+    | "/docs/whats-new/v1.7.md"
     | "/icon/128.png"
     | "/icon/16.png"
     | "/icon/32.png"
     | "/icon/48.png"
-    | "/icon/96.png"
+    | "/images/cu-logo.png"
+    | "/images/db-logo.png"
+    | "/native-messaging/MySquad Native Messaging Installer.dmg"
     | "/sidepanel.html"
     | "/wxt.svg"
-    | "/zsm.jpg"
   type HtmlPublicPath = Extract<PublicPath, `${string}.html`>
   export interface WxtRuntime extends Runtime.Static {
     getURL(path: PublicPath): string;
