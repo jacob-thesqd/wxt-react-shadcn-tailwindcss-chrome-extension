@@ -1,8 +1,8 @@
 {
-  "name": "mySquad Extension 2.0",
-  "description": "manifest.json description",
+  "name": "mySquad Extension v2.0",
+  "description": "A Chrome extension for Church Media Squad employees",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",

@@ -11,6 +11,72 @@ interface PushNotificationPayload {
   requireInteraction?: boolean;
 }
 
+const CLICKUP_PATTERNS = [
+  /https?:\/\/app\.clickup\.com\/\d+\/v\/l\/([a-zA-Z0-9_-]+)/,
+  /https?:\/\/app\.clickup\.com\/t\/([a-zA-Z0-9_-]+)/,
+  /https?:\/\/app\.clickup\.com\/\d+\/v\/li\/([a-zA-Z0-9_-]+)/,
+  /https?:\/\/app\.clickup\.com\/\d+\/v\/dc\/([a-zA-Z0-9_-]+)/,
+  /https?:\/\/app\.clickup\.com\/([a-zA-Z0-9_-]{8,})/,
+  /[?&]task=([a-zA-Z0-9_-]+)/,
+  /[?&]taskId=([a-zA-Z0-9_-]+)/,
+  /[?&]clickup=([a-zA-Z0-9_-]+)/,
+  /[?&]cu=([a-zA-Z0-9_-]+)/,
+  /\/task\/([a-zA-Z0-9_-]+)/,
+  /\/clickup\/([a-zA-Z0-9_-]+)/,
+  /\/cu\/([a-zA-Z0-9_-]+)/,
+  /https?:\/\/app\.clickup\.com\/\d+\/.*\/t\/([a-zA-Z0-9_-]+)/,
+  /https?:\/\/app\.clickup\.com\/\d+\/.*\/([a-zA-Z0-9_-]{8,})/,
+];
+
+const extractClickupTaskId = (url: string) => {
+  for (const pattern of CLICKUP_PATTERNS) {
+    const match = url.match(pattern);
+    if (match?.[1]) {
+      return match[1];
+    }
+  }
+
+  return null;
+};
+
+const extractInternalTaskId = (url: string) => {
+  try {
+    const decoded = decodeURIComponent(url);
+    const explicitMatch = decoded.match(/\((SQD-[\w-]+)\)/i);
+    if (explicitMatch?.[1]) {
+      return explicitMatch[1];
+    }
+
+    const fallbackMatch = decoded.match(/\bSQD-[\w-]+\b/i);
+    return fallbackMatch?.[0] ?? null;
+  } catch {
+    return null;
+  }
+};
+
+const getTaskIdFromUrl = (url: string) => {
+  const internalId = extractInternalTaskId(url);
+  if (internalId) {
+    return internalId;
+  }
+
+  return extractClickupTaskId(url);
+};
+
+const updateExtensionBadge = async (tabId: number, url: string) => {
+  const taskId = getTaskIdFromUrl(url);
+
+  if (taskId) {
+    await browser.action.setBadgeText({ tabId, text: "●" });
+    await browser.action.setBadgeBackgroundColor({ tabId, color: "#ef4444" });
+    await browser.action.setBadgeTextColor?.({ tabId, color: "#ef4444" });
+    await browser.action.setTitle({ tabId, title: `Task detected: ${taskId}` });
+  } else {
+    await browser.action.setBadgeText({ tabId, text: "" });
+    await browser.action.setTitle({ tabId, title: "MySquad Extension" });
+  }
+};
+
 export default defineBackground(() => {
   try {
     if (browser.webRequest?.onBeforeRequest?.addListener) {
@@ -48,6 +114,45 @@ export default defineBackground(() => {
   } catch (error) {
     console.warn("webRequest API unavailable; OAuth redirect capture disabled in this environment.", error);
   }
+
+  browser.tabs
+    .query({ active: true, currentWindow: true })
+    .then((tabs) => {
+      const tab = tabs[0];
+      if (tab?.id && tab.url) {
+        return updateExtensionBadge(tab.id, tab.url);
+      }
+      return undefined;
+    })
+    .catch((error) => {
+      console.warn("Failed to initialize extension badge state.", error);
+    });
+
+  browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (!changeInfo.url && changeInfo.status !== "complete") {
+      return;
+    }
+
+    const url = changeInfo.url ?? tab.url;
+    if (!url) {
+      return;
+    }
+
+    updateExtensionBadge(tabId, url).catch((error) => {
+      console.warn("Failed to update extension badge on tab update.", error);
+    });
+  });
+
+  browser.tabs.onActivated.addListener(async (activeInfo) => {
+    try {
+      const tab = await browser.tabs.get(activeInfo.tabId);
+      if (tab.url) {
+        await updateExtensionBadge(activeInfo.tabId, tab.url);
+      }
+    } catch (error) {
+      console.warn("Failed to update extension badge on tab activation.", error);
+    }
+  });
 
   self.addEventListener("push", (event: PushEvent) => {
     console.log("[Background] Push event received:", event);

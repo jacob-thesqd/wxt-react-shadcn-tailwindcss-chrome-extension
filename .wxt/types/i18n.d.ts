@@ -77,7 +77,7 @@ Note: You can't use this message in a manifest file.
     /**
      * No message description.
      *
-     * "mySquad Extension 2.0"
+     * "mySquad Extension v2.0"
      */
     getMessage(
       messageName: "extName",

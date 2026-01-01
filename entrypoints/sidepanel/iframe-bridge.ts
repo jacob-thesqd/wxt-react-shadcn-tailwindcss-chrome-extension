@@ -215,7 +215,7 @@ async function handleNativeRequest(iframe: HTMLIFrameElement, message: IframeNat
     }
 }
 
-export function startIframeBridge(iframe: HTMLIFrameElement) {
+export function startIframeBridge(iframe: HTMLIFrameElement, {onReady}: {onReady?: () => void} = {}) {
     const handleMessage = async (event: MessageEvent<IframeReadyMessage | IframeNativeRequestMessage>) => {
         if (!event.data || event.data.source !== "mysquad-iframe" || event.data.type !== "ready") {
             if (event.data && event.data.source === "mysquad-iframe" && event.data.type === "native-request") {
@@ -223,6 +223,8 @@ export function startIframeBridge(iframe: HTMLIFrameElement) {
             }
             return;
         }
+
+        onReady?.();
 
         const url = await getActiveTabUrl();
         if (url) {
