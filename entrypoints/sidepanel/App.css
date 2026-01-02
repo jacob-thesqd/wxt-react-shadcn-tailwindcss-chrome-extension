@@ -36,27 +36,6 @@ iframe {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: radial-gradient(circle at 50% 20%, rgba(239, 68, 68, 0.12), rgba(17, 18, 23, 0.95));
+  background: radial-gradient(circle at 50% 20%, rgba(127, 86, 217, 0.12), rgba(17, 18, 23, 0.95));
   color: #e5e7eb;
-}
-
-.iframe-spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid rgba(229, 231, 235, 0.25);
-  border-top-color: #ef4444;
-  border-radius: 50%;
-  animation: iframe-spin 0.8s linear infinite;
-}
-
-.iframe-loader-text {
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-@keyframes iframe-spin {
-  to {
-    transform: rotate(360deg);
-  }
 }

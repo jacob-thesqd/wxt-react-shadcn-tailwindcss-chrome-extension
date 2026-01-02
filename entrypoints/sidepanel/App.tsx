@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import './App.css';
 import {startIframeBridge} from "@/entrypoints/sidepanel/iframe-bridge.ts";
+import { LoadingIndicator } from "@/components/application/loading-indicator/loading-indicator";
 
 export default () => {
     const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -32,8 +33,7 @@ export default () => {
             />
             {isLoading ? (
                 <div className="iframe-loader" role="status" aria-live="polite">
-                    <div className="iframe-spinner" />
-                    <div className="iframe-loader-text">Loading MySquad...</div>
+                    <LoadingIndicator type="dot-circle" size="md" label="Loading MySquad..." />
                 </div>
             ) : null}
         </div>
